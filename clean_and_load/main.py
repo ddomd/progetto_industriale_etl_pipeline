@@ -1,3 +1,4 @@
+from typing import Set
 from facts.indicatori_econ_161_268 import clean_161_268
 from facts.pernottamenti_68_357 import clean_68_357
 from facts.dati_strutture_122_54 import clean_122_54
@@ -5,23 +6,26 @@ from dimensions.download_dimensions import download_dimensions
 from download_structures import get_structure
 from db_operations.db_operations import *
 
+# Selected datastructures to get dimensions
 structures = ["DCSC_TUR", "DCCV_TURNOT_CAPI", "DCSP_SBSREG"]
 
+# enum for fact table names
 fact_tables = {
     "turismo": "facts_turismo",
     "pernottamenti": "facts_pernottamenti",
     "indicatori_econ": "facts_indicatori_economici",
 }
 
-dimensions = set()
+# set to group dimension without repetitions
+dimensions: Set[str] = set()
 
+# download all of the structures and add them to the dimension set
 for structure in structures:
     struct = get_structure(structure)
     dimensions.update(struct)
 
 print("----------------------------------------------------------------------")
 print("Downloading Dimensions: \n")
-print(dimensions)
 df_dimensions = download_dimensions(dimensions)
 
 print("----------------------------------------------------------------------")

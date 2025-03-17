@@ -1,13 +1,14 @@
 import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
+from pandas import DataFrame
 
 load_dotenv()
 
 engine = create_engine(os.getenv("CONN_STRING"))
 
 
-def bulk_insert(table_name, dataframe, schema="public"):
+def bulk_insert(table_name: str, dataframe: DataFrame, schema="public"):
     try:
         dataframe.to_sql(
             name=table_name,
@@ -22,7 +23,7 @@ def bulk_insert(table_name, dataframe, schema="public"):
         print(f"- Error inserting data into {table_name}: {str(e)}")
 
 
-def truncate_table(table_name, schema="public"):
+def truncate_table(table_name: str, schema="public"):
     try:
         sql = text(f"TRUNCATE TABLE {schema}.{table_name}")
 
@@ -35,8 +36,7 @@ def truncate_table(table_name, schema="public"):
         print(f"- Error truncating table {schema}.{table_name}: {str(e)}")
 
 
-def upsert_dataframe(table_name, dataframe, schema="public"):
-    # Build the query once outside the loop
+def upsert_dataframe(table_name: str, dataframe: DataFrame, schema="public"):
     columns = ", ".join(dataframe.columns)
     placeholders = ", ".join([f":{col}" for col in dataframe.columns])
     update_set = ", ".join(
@@ -51,8 +51,7 @@ def upsert_dataframe(table_name, dataframe, schema="public"):
     """
     )
 
-    # Convert dataframe to list of dicts for executemany
     records = dataframe.to_dict("records")
 
-    with engine.begin() as conn:  # begin() automatically handles commit/rollback
+    with engine.begin() as conn:
         conn.execute(query, records)

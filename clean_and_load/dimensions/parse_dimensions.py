@@ -1,8 +1,9 @@
+from typing import List
 import pandas as pd
 import xml.etree.ElementTree as ET
 
 
-def parse_code(codelist):
+def parse_code(codelist: str):
     codes = {}
     # Apro il file dove ho salvato la chiamata XML e setto un puntatore al primo livello dei tag XML
     root = ET.fromstring(codelist)
@@ -36,7 +37,7 @@ def parse_code(codelist):
     return df
 
 
-def parse_codelist(codelist):
+def parse_codelist(codelist: List[str]) -> List[pd.DataFrame]:
     codes = []
 
     for code in codelist:

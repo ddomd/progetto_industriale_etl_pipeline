@@ -1,8 +1,10 @@
+from typing import List
 from facts.parse_data import parse_and_combine
 from download_operations.download import download_list
 
 
 def download_161_268():
+    # filters to request only data from the territory of Liguria
     location_filters = {
         "liguria": "ITC3+ITC31+ITC32+ITC33+ITC34",
         "genova-1": "010001+010002+010003+010004+010005+010006+010007+010008+010009+010010+010011+010012+010013+010014+010015+010016+010017+010018+010019+010020+010021+010022+010023+010024+010025+010026+010027+010028+010029+010030+010031+010032+010033+010034+010035",
@@ -14,6 +16,8 @@ def download_161_268():
         "laspezia-1": "011001+011002+011003+011004+011005+011006+011007+011008+011009+011010+011011+011012+011013+011014+011015+011016+011017+011018+011019+011020+011021+011022+011023+011024+011025+011026+011027+011028+011029+011030+011031+011032",
     }
 
+    # list of urls with filters applied to use for queries,
+    # the reason they are split is because the query can only accept 35 filters per field
     url_list = [
         f"https://esploradati.istat.it/SDMXWS/rest/data/IT1,161_268,1.0/.{locations}..55+56/ALL/?detail=full&startPeriod=2016-01-01"
         for locations in location_filters.values()
@@ -26,7 +30,7 @@ def download_161_268():
     return responses
 
 
-def parse_161_268(responses):
+def parse_161_268(responses: List[str]):
     to_drop = [
         "DATAFLOW",
         "OBS_STATUS",

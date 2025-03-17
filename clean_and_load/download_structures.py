@@ -1,8 +1,9 @@
+from typing import Set
 import requests
 import xml.etree.ElementTree as ET
 
 
-def get_structure(datastructure):
+def get_structure(datastructure: str) -> Set[str]:
 
     dimensions = set()
 
