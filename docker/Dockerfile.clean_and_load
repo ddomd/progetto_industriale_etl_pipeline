@@ -1,0 +1,10 @@
+FROM python:3.11-slim
+
+WORKDIR /app/clean_and_load
+
+COPY ./clean_and_load /app/clean_and_load
+
+RUN pip install dotenv sqlalchemy aiohttp requests pandas tqdm psycopg2-binary
+
+# Cerca di runnare tutte le migrazioni di default
+CMD ["python", "-u",  "main.py"]

@@ -1,0 +1,4 @@
+docker/db_data/
+__pycache__/
+tools/
+.env

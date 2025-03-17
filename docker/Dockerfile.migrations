@@ -1,0 +1,10 @@
+FROM python:3.11-slim
+
+WORKDIR /app/migrations
+
+COPY ./migrations /app/migrations
+
+RUN pip install alembic psycopg2-binary
+
+# Cerca di runnare tutte le migrazioni di default
+CMD ["alembic", "upgrade", "head"]

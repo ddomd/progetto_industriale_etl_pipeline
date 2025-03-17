@@ -1,0 +1,42 @@
+services:
+  # Database service
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: istat_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d istat_data"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Migration service
+  migrations:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.migrations
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # Clean and load service
+  clean_and_load:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.clean_and_load
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    restart: "no"
+
+volumes:
+  postgres_data:
